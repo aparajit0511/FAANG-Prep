@@ -16,3 +16,28 @@ class Solution:
         self.invertTree(root.right)          
 
         return root
+
+
+
+class Solution:
+    def invertTree(self, root: Optional[TreeNode]) -> Optional[TreeNode]:
+        if not root:
+            return None
+
+        from collections import deque
+        queue = deque()
+
+        queue.append(root)
+
+        while queue:
+            item = queue.popleft()
+
+            item.left , item.right = item.right , item.left
+
+            if item.left:
+                queue.append(item.left)
+
+            if item.right:
+                queue.append(item.right)
+
+        return root
