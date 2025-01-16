@@ -1,31 +1,39 @@
+# Definition for a binary tree node.
+# class TreeNode:
+#     def __init__(self, x):
+#         self.val = x
+#         self.left = None
+#         self.right = None
+
 class Solution:
-    def searchMatrix(self, matrix: List[List[int]], target: int) -> bool:
+    def lowestCommonAncestor(self, root: 'TreeNode', p: 'TreeNode', q: 'TreeNode') -> 'TreeNode':
+        from collections import deque
+        queue = deque()
+        queue.append(root)
         
-        start , end = 0 , len(matrix)-1
+        parent = {root.val:None}
 
-        while start <= end:
-            mid = (start + end) // 2
+        while p not in parent or q not in parent:
 
-            if matrix[mid][0] == target:
-                return True
-            elif target < matrix[mid][0]:
-                end = mid - 1
-            else:
-                start = mid + 1
+            node = queue.popleft()
 
+            if node.left:
+                queue.append(node.left)
+                parent[node.left.val] = node.val
 
-        start , end = 0 , len(matrix[0])-1
-        row = end
-
-        while start <= end:
-            mid = (start + end) // 2
-
-            if matrix[row][mid] == target:
-                return True
-            elif target < matrix[row][mid]:
-                end = mid - 1
-            else:
-                start = mid + 1
+            if node.right:
+                queue.append(node.right)
+                parent[node.right.val] = node.val
 
 
-        return False
+        ancestors = set()
+
+        while p:
+            ancestors.add(p)
+            p = parent[p]
+
+        while q not in ancestors:
+            q = parent[q]
+
+        return q
+
