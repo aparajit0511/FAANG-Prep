@@ -1,39 +1,31 @@
-# Definition for a binary tree node.
-# class TreeNode:
-#     def __init__(self, x):
-#         self.val = x
-#         self.left = None
-#         self.right = None
-
 class Solution:
-    def lowestCommonAncestor(self, root: 'TreeNode', p: 'TreeNode', q: 'TreeNode') -> 'TreeNode':
-        from collections import deque
-        queue = deque()
-        queue.append(root)
+    def exist(self, board: List[List[str]], word: str) -> bool:
+        row = len(board)
+        col = len(board[0])
+        path = set()
         
-        parent = {root.val:None}
+        def wordSearch(r,c,index):
+            if index == len(word):
+                return True
 
-        while p not in parent or q not in parent:
+            if r < 0 or r >= row or c < 0 or c >= col or board[r][c] != word[index] or (r,c) in path:
+                return False
 
-            node = queue.popleft()
+            path.add((r,c))
+            res = wordSearch(r+1,c,index+1) or wordSearch(r-1,c,index+1) or wordSearch(r,c+1,index+1) or wordSearch(r,c-1,index+1)
 
-            if node.left:
-                queue.append(node.left)
-                parent[node.left.val] = node.val
+            path.remove((r,c))
 
-            if node.right:
-                queue.append(node.right)
-                parent[node.right.val] = node.val
+            return res
 
 
-        ancestors = set()
+        for i in range(row):
+            for j in range(col):
+                index = 0
 
-        while p:
-            ancestors.add(p)
-            p = parent[p]
+                if board[i][j] == word[index]:
+                    if wordSearch(i,j,index):
+                        return True
 
-        while q not in ancestors:
-            q = parent[q]
-
-        return q
+        return False
 
